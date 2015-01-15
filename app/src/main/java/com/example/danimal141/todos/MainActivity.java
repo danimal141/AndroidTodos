@@ -1,10 +1,13 @@
 package com.example.danimal141.todos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,7 +31,21 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_add_task) {
-            Log.d("MainActivity", "Add a new task");
+            final EditText inputField = new EditText(this);
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.message_add_task)
+                    .setMessage(R.string.message_guide)
+                    .setView(inputField)
+                    .setPositiveButton(R.string.action_add, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d("MainActivity", inputField.getText().toString());
+                        }
+                    })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show();
+
             return true;
         }
 

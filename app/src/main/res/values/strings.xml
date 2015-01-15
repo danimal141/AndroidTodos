@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Todos</string>
-    <string name="action_add_task">Add task</string>
+    <string name="message_add_task">Add a task</string>
+    <string name="message_guide">What do you want to do?</string>
+    <string name="action_add">Add</string>
+    <string name="action_cancel">Cancel</string>
 
 </resources>
