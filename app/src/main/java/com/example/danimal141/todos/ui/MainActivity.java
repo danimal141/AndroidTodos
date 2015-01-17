@@ -1,4 +1,4 @@
-package com.example.danimal141.todos;
+package com.example.danimal141.todos.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import com.example.danimal141.todos.R;
 
 
 public class MainActivity extends ActionBarActivity {
