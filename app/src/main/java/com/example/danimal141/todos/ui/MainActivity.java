@@ -1,7 +1,9 @@
 package com.example.danimal141.todos.ui;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +12,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.example.danimal141.todos.R;
+import com.example.danimal141.todos.db.TaskContract;
+import com.example.danimal141.todos.db.TaskDBHelper;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private TaskDBHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +36,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_add_task) {
+        if (item.getItemId() == R.id.action_add_task) {
             final EditText inputField = new EditText(this);
 
             new AlertDialog.Builder(this)
@@ -42,7 +46,17 @@ public class MainActivity extends ActionBarActivity {
                     .setPositiveButton(R.string.action_add, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.d("MainActivity", inputField.getText().toString());
+                            String task = inputField.getText().toString();
+                            Log.d("MainActivity", task);
+
+                            helper = new TaskDBHelper(MainActivity.this);
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+
+                            values.clear();
+                            values.put(TaskContract.Columns.TASK, task);
+
+                            db.insertWithOnConflict(TaskContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
                         }
                     })
                     .setNegativeButton(R.string.action_cancel, null)
