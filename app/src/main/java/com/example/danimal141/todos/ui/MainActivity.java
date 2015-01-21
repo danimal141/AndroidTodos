@@ -3,13 +3,16 @@ package com.example.danimal141.todos.ui;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.example.danimal141.todos.R;
 import com.example.danimal141.todos.db.TaskContract;
@@ -24,8 +27,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        updateUI();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,5 +70,23 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateUI() {
+        helper = new TaskDBHelper(this);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query(TaskContract.TABLE,
+                new String[]{TaskContract.Columns.ID, TaskContract.Columns.TASK},
+                null, null, null, null, null);
+        SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.list_item_task,
+                cursor,
+                new String[]{TaskContract.Columns.TASK},
+                new int[]{R.id.task_text},
+                0
+        );
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        listView.setAdapter(listAdapter);
     }
 }
