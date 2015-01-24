@@ -10,9 +10,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.danimal141.todos.R;
 import com.example.danimal141.todos.db.TaskContract;
@@ -60,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
                             values.put(TaskContract.Columns.TASK, task);
 
                             db.insertWithOnConflict(TaskContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                            updateUI();
                         }
                     })
                     .setNegativeButton(R.string.action_cancel, null)
@@ -87,5 +90,21 @@ public class MainActivity extends ActionBarActivity {
         );
         ListView listView = (ListView) findViewById(android.R.id.list);
         listView.setAdapter(listAdapter);
+    }
+
+    public void onDoneButtonClick(View view) {
+        View v = (View) view.getParent();
+        TextView taskTextView =    (TextView) v.findViewById(R.id.task_text);
+        String task = taskTextView.getText().toString();
+
+        String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+                TaskContract.TABLE,
+                TaskContract.Columns.TASK,
+                task);
+
+        helper = new TaskDBHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(sql);
+        updateUI();
     }
 }
