@@ -1,1 +1,1 @@
-### Android Todo app sample
+## Todo application for Android
